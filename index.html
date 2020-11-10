@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+		<title>Jobs Do It</title>
+	</head>
+	<style type="text/css">
+		body {  /*不用.*/
+			padding:0;
+			font-family:"微軟正黑體","Microsoft JhengHei";
+			font-size:20px;  
+			background: rgb(249, 247, 232, 0.3);
+			height: 100%;
+			margin: 0; 
+		}
+		.main {
+			margin-left:400px;    
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+		}
+		.subject{
+			font-size: 50px;
+			font-weight:bold;
+			color: black;
+		}
+		.details {    
+			flex: 1;
+			display: flex;
+			flex-direction: column;			
+			width:65%;
+			height:50px;
+			color:black;
+			cursor: pointer;   /*滑鼠游標*/
+			line-height:30px;  /*行距*/	
+			margin: 15px; /*div間格距離*/
+		}
+		.details ::-webkit-details-marker {  
+    		display: none;
+		}
+		blockquote {  /*不用.*/
+			margin: 1em 3em;
+			padding: .1em 1em;
+			border-left: 5px solid gray;
+			background-color: #ffffff;
+			color:black;
+			font-size:18px;
+			width:85%;
+		}
+        .tt{
+			text-align:center;
+			font-size:25px;
+	    }
+		.content{
+			font-size:25px;
+		}
+		.ss{
+			font-size: 26px;
+			color: red;
+			position: relative;
+			width:200px;
+		}
+		a{
+		text-decoration:none;
+		}
+		.top_right a,a:link{
+			color:black;
+		}
+		.top_right{
+			position:absolute;
+			font-size:24px;
+			z-index:2;
+			top:6%;
+			cursor:pointer;
+		}
+		.top{
+		position:absolute;
+		left:10%;
+		font-size:32px;
+		z-index:2;
+		}
+	</style>
+	<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+	<script type="text/javascript">	
+		window.onload=getData;
+
+		var firebaseConfig = {
+			apiKey: "AIzaSyAUAbIPPBY63TUc-GKJw1-P5wHQpkQT7mY",
+			authDomain: "jobsdoit-8d922.firebaseapp.com",
+			databaseURL: "https://jobsdoit-8d922.firebaseio.com",
+			projectId: "jobsdoit-8d922",
+			storageBucket: "jobsdoit-8d922.appspot.com",
+			messagingSenderId: "735202865207",
+			appId: "1:735202865207:web:8c5ef1d54ef5c3dcc20fb2",
+			measurementId: "G-F5Q8SCH11J"
+		};
+		  // 資料庫資訊
+		firebase.initializeApp(firebaseConfig);
+		function login_ornot()
+		{
+			var user = firebase.auth().currentUser;			
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+					
+					var act = document.getElementById("act");			
+					act.href="modify_page1.html";
+					
+				} else {
+					var act = document.getElementById("act");			
+					act.href="login.html";
+					alert("請先登入");
+				}
+			});			
+		}
+		function getData()
+		{				
+			var user = firebase.auth().currentUser;			
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) 
+				{
+					var login_text = document.getElementById("login_text");			
+					login_text.innerHTML="登出";
+					login_text.addEventListener('click', function (){
+						firebase.auth().signOut().then(function() {
+						alert("帳號已登出");
+						window.location.replace("login.html");
+						}).catch(function(error) {
+						// An error happened.
+						});					
+	   				});
+					var id = firebase.auth().currentUser.uid;	
+				} 
+				else 
+				{
+					var login_text = document.getElementById("login_text");	
+					login_text.innerHTML="登入";
+					
+					login_text.addEventListener('click', function (){
+						
+						window.location.replace("login.html");
+										
+	   				});
+					
+				}
+			});					
+					firebase.database().ref('/AD_User/' + '/Lu1UjqEweOYiHEPpQQIRPdUm9sM2/'+'/Advertise/One').once('value').then(function(snapshot) {				
+						for(i=0;i<6;i++)
+						{
+							var x = document.getElementById("table1").rows[i].cells;
+							switch(i)
+							{
+								case 0:
+									x[1].innerHTML = snapshot.val().活動名稱;
+								break;
+								case 1:
+									x[1].innerHTML = snapshot.val().單位;
+								break;
+								case 2:
+									x[1].innerHTML = snapshot.val().日期;
+								break;
+								case 3:
+									x[1].innerHTML = snapshot.val().地點;
+								break;
+								case 4:
+									x[1].innerHTML = snapshot.val().報名費用;
+								break;
+								case 5:
+									x[1].innerHTML = snapshot.val().適合年齡;
+								break;
+							}				
+						}
+					
+						//var con = document.getElementById("con1")
+						con1.innerHTML += snapshot.val().內容;
+
+						//var com = document.getElementById("com1")
+						com1.innerHTML = snapshot.val().活動名稱;
+						com1.href = String(snapshot.val().官方網站);
+					});
+					firebase.database().ref('/AD_User/' + '/Lu1UjqEweOYiHEPpQQIRPdUm9sM2/'+'/Advertise/Two').once('value').then(function(snapshot) {				
+						for(i=0;i<6;i++)
+						{
+							var x = document.getElementById("table2").rows[i].cells;
+							switch(i)
+							{
+								case 0:
+									x[1].innerHTML = snapshot.val().活動名稱;
+								break;
+								case 1:
+									x[1].innerHTML = snapshot.val().單位;
+								break;
+								case 2:
+									x[1].innerHTML = snapshot.val().日期;
+								break;
+								case 3:
+									x[1].innerHTML = snapshot.val().地點;
+								break;
+								case 4:
+									x[1].innerHTML = snapshot.val().報名費用;
+								break;
+								case 5:
+									x[1].innerHTML = snapshot.val().適合年齡;
+								break;
+							}				
+						}
+					
+							//var con = document.getElementById("con2")
+							con2.innerHTML += snapshot.val().內容;
+
+							//var com = document.getElementById("com2")
+							com2.innerHTML = snapshot.val().活動名稱;
+							com2.href = String(snapshot.val().官方網站);
+					});
+					firebase.database().ref('/AD_User/' + '/BldmSps6nITWht4euS67O0LoEIf2/'+'/Advertise/One').once('value').then(function(snapshot) {				
+						for(i=0;i<6;i++)
+						{
+							var x = document.getElementById("table3").rows[i].cells;
+							switch(i)
+							{
+								case 0:
+									x[1].innerHTML = snapshot.val().活動名稱;
+								break;
+								case 1:
+									x[1].innerHTML = snapshot.val().單位;
+								break;
+								case 2:
+									x[1].innerHTML = snapshot.val().日期;
+								break;
+								case 3:
+									x[1].innerHTML = snapshot.val().地點;
+								break;
+								case 4:
+									x[1].innerHTML = snapshot.val().報名費用;
+								break;
+								case 5:
+									x[1].innerHTML = snapshot.val().適合年齡;
+								break;
+							}				
+						}
+					
+						//var con = document.getElementById("con3")
+						con3.innerHTML += snapshot.val().內容;
+
+						//var com = document.getElementById("com3")
+						com3.innerHTML = snapshot.val().活動名稱;
+						com3.href = String(snapshot.val().官方網站);
+					});
+					firebase.database().ref('/AD_User/' + '/sZ3rqZAJBxdHga1F5pDTZ94wbMI2/'+'/Advertise/One').once('value').then(function(snapshot) {				
+						for(i=0;i<6;i++)
+						{
+							var x = document.getElementById("table4").rows[i].cells;
+							switch(i)
+							{
+								case 0:
+									x[1].innerHTML = snapshot.val().活動名稱;
+								break;
+								case 1:
+									x[1].innerHTML = snapshot.val().單位;
+								break;
+								case 2:
+									x[1].innerHTML = snapshot.val().日期;
+								break;
+								case 3:
+									x[1].innerHTML = snapshot.val().地點;
+								break;
+								case 4:
+									x[1].innerHTML = snapshot.val().報名費用;
+								break;
+								case 5:
+									x[1].innerHTML = snapshot.val().適合年齡;
+								break;
+							}				
+						}
+					
+						var con = document.getElementById("con4")
+						con4.innerHTML += snapshot.val().內容;
+
+						var com = document.getElementById("com4")
+						com4.innerHTML = snapshot.val().活動名稱;
+						com4.href = String(snapshot.val().官方網站);
+					});
+						
+		}
+	</script>
+	<body>
+	<div class="top">Jobs Do It</div>
+	<div class="top_right" style="left:70%;"><a href="download.html">下載專區</a></div>
+	<div class="top_right" style="left:78%;"><a href="">活動資訊</a></div>
+	<div class="top_right" style="left:86%;" onclick="login_ornot();" ><a id="act" href="modify_page1.html" >刊登活動</a></div>
+	<div id="login_text" class="top_right" style="left:94%;"><a id="act2" href="login.html">登出</a></div>
+	<div style="background-color: rgb(251, 250, 232); width:100%; height: 100px; position:relative"></div>  
+    <div class="main">
+		<div class = "subject">活動資訊</div>
+		<details class="details">
+            <summary><img src="police.jpg" width="400px" height="278px">
+			    <div style="float:right; position:relative;">
+                    <table id="table1" cellpadding="5">  <!--cellpadding表格內元素和邊框間的距離-->
+                        <tr class="tt"><td>活動名稱</td><td></td></tr>
+                        <tr class="tt"><td>單位</td><td></td></tr>
+                        <tr class="tt"><td>日期</td><td></td></tr>
+						<tr class="tt"><td>地點</td><td></td></tr>
+						<tr class="tt"><td>費用</td><td></td></tr>
+                        <tr class="tt"><td>適合年齡</td><td></td></tr>
+					</table>
+					<div class="ss" style="left:50%"><b>點擊查看更多</b></div>
+                </div>
+            </summary>
+			<blockquote class="content">		
+				<p id="con1"><b>內容：</b></p>
+				<p><b>官網：</b><a href="" id="com1"></a></p>
+			</blockquote>
+		</details>
+		<details class="details">
+            <summary><img src="farmer.jpg" width="400px" height="278px">
+			    <div style="float:right; position:relative;left:9%;">
+                    <table id="table2" cellpadding="5">  <!--cellpadding表格內元素和邊框間的距離-->
+                        <tr class="tt"><td>活動名稱</td><td></td></tr>
+                        <tr class="tt"><td>單位</td><td></td></tr>
+                        <tr class="tt"><td>日期</td><td></td></tr>
+						<tr class="tt"><td>地點</td><td></td></tr>
+						<tr class="tt"><td>費用</td><td></td></tr>
+                        <tr class="tt"><td>適合年齡</td><td></td></tr>
+					</table>
+					<div class="ss"  style="left:41%"><b>點擊查看更多</b></div>
+                </div>
+            </summary>
+			<blockquote class="content">		
+				<p id="con2"><b>內容：</b></p>
+				<p><b>官網：</b><a href="" id="com2"></a></p>
+			</blockquote>
+		</details>
+		<details class="details">
+            <summary><img src="medicine.jpg" width="400px" height="278px">
+			    <div style="float:right; left:6%; position:relative;">
+                    <table id="table3" cellpadding="5">  <!--cellpadding表格內元素和邊框間的距離-->
+                        <tr class="tt"><td>活動名稱</td><td></td></tr>
+                        <tr class="tt"><td>單位</td><td></td></tr>
+                        <tr class="tt"><td>日期</td><td></td></tr>
+						<tr class="tt"><td>地點</td><td></td></tr>
+						<tr class="tt"><td>費用</td><td></td></tr>
+                        <tr class="tt"><td>適合年齡</td><td></td></tr>
+					</table>
+					<div class="ss" style="left:44%"><b>點擊查看更多</b></div>
+                </div>
+            </summary>
+			<blockquote class="content">		
+				<p id="con3"><b>內容：</b></p>
+				<p><b>官網：</b><a href="" id="com3"></a></p>
+			</blockquote>
+		</details>
+		<details class="details">
+            <summary><img src="bighand.jpg" width="400px" height="278px">
+			    <div style="float:right; left:4%; position:relative;">
+                    <table id="table4" cellpadding="5">  <!--cellpadding表格內元素和邊框間的距離-->
+                        <tr class="tt"><td>活動名稱</td><td></td></tr>
+                        <tr class="tt"><td>單位</td><td></td></tr>
+                        <tr class="tt"><td>日期</td><td></td></tr>
+						<tr class="tt"><td>地點</td><td></td></tr>
+						<tr class="tt"><td>費用</td><td></td></tr>
+                        <tr class="tt"><td>適合年齡</td><td></td></tr>
+					</table>
+					<div class="ss" style="left:44%"><b>點擊查看更多</b></div>
+                </div>
+            </summary>
+			<blockquote class="content">		
+				<p id="con4"><b>內容：</b></p>
+				<p><b>官網：</b><a href="" id="com4"></a></p>
+			</blockquote>
+		</details>
+    </div>
+	<script src="/__/firebase/6.2.0/firebase-app.js"></script> 
+  	<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
+  	<script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+  	<script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
+  	<script src="/__/firebase/init.js"></script> 
+	</body>
+</html>

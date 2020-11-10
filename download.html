@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+		<title>Jobs Do It</title>
+    </head>
+    <style type="text/css">
+		body {  /*不用.*/
+			padding:0;
+			font-family:"微軟正黑體","Microsoft JhengHei";
+			font-size:20px;  
+			background: rgb(249, 247, 232, 0.3);
+			height: 100%;
+			margin: 0; 
+		}		    
+		a{
+		text-decoration:none;
+		}
+		.top_right a,a:link{
+			color:black;
+		}
+		.top_right{
+			position:absolute;
+			font-size:24px;
+			z-index:2;
+			top:6%;
+			cursor:pointer;
+		}
+		.top{
+		position:absolute;
+		left:10%;
+		font-size:32px;
+		z-index:2;
+		}
+        .content{
+		position:absolute;
+        top:15%;
+		left:30%;
+		border: solid;
+		border-color:#fff4c7;
+		border-radius: 12px;
+		width: 40%;
+		height: 75%;
+		z-index:3;		
+	}
+    .logo{
+		position:absolute;
+        top:0%;
+        left:40%;
+	}
+    .download
+    {   position:absolute;		
+        left:5%;
+        top:80%;
+        width:70%;        
+    }
+    .intro
+    {
+        position:absolute;		
+        top:28%;
+        left:5%;
+        width:90%;
+    }
+    .link 
+    {   
+        position:absolute;
+        top:100%;
+        left:10%;
+        
+    }
+    .title
+    {
+        font-size: 26px;
+    }
+    </style>
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+<script type="text/javascript">
+window.onload=first;
+    var firebaseConfig = {
+			apiKey: "AIzaSyAUAbIPPBY63TUc-GKJw1-P5wHQpkQT7mY",
+			authDomain: "jobsdoit-8d922.firebaseapp.com",
+			databaseURL: "https://jobsdoit-8d922.firebaseio.com",
+			projectId: "jobsdoit-8d922",
+			storageBucket: "jobsdoit-8d922.appspot.com",
+			messagingSenderId: "735202865207",
+			appId: "1:735202865207:web:8c5ef1d54ef5c3dcc20fb2",
+			measurementId: "G-F5Q8SCH11J"
+		};
+		  // 資料庫資訊
+		firebase.initializeApp(firebaseConfig);
+		function login_ornot()
+		{
+			var user = firebase.auth().currentUser;			
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+					
+					var act = document.getElementById("act");			
+					act.href="modify_page1.html";
+					
+				} else {
+					var act = document.getElementById("act");			
+					act.href="login.html";
+					alert("請先登入");
+				}
+			});			
+		}
+        function first()
+		{
+			var user = firebase.auth().currentUser;			
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+					
+					var login_text = document.getElementById("login_text");			
+					login_text.innerHTML="登出";
+					login_text.addEventListener('click', function (){
+						firebase.auth().signOut().then(function() {
+						alert("帳號已登出");
+						window.location.replace("login.html");
+						}).catch(function(error) {
+						// An error happened.
+						});					
+	   				});
+					
+				} else {
+					var login_text = document.getElementById("login_text");			
+					login_text.innerHTML="登入";
+                    login_text.addEventListener('click', function (){
+						
+						window.location.replace("login.html");
+										
+	   				});
+					//alert("請先登入");
+				}
+			});
+		}
+        
+
+
+</script>
+<body>
+    <div class="top">Jobs Do It</div>
+	<div class="top_right" style="left:70%;"><a href="">下載專區</a></div>
+	<div class="top_right" style="left:78%;"><a href="index.html">活動資訊</a></div>
+	<div class="top_right" style="left:86%;" onclick="login_ornot();" ><a id="act" href="modify_page1.html" >刊登活動</a></div>
+	<div id="login_text" class="top_right" style="left:94%;"><a id="act2" href="login.html">登出</a></div>
+	<div style="background-color: rgb(251, 250, 232); width:100%; height: 100px; position:relative"></div>  
+    <div class="content" style="border-color:#FFAC55;padding:5px;">
+        <div class="intro"><b><u class="title">遊戲介紹:</u></b><br>《Jobs Do It!》是一款設計給9到12歲孩童的創新體驗職業遊戲，遊戲以手機作為操作搖桿，畫面則呈現在電腦螢幕上。「創新體驗」在於應用到體感技術與人工智慧辨識，其中，體感用以強化遊戲的體驗性，透過動態的肢體感受，讓孩童對職業體驗有深刻印象；人工智慧辨識則可以提高人機的互動性，孩童可以藉由多樣的互動情境來認識職業，例如：司機遊戲裡，上路前須使用手機模擬的酒測器做吹氣酒測；老師遊戲裡，則以手機模擬麥克風授課。而考量到遊戲的教育性，遊戲內置入豐富的職業知識，以語音與文字並搭配人物的動畫或相關模型，將職業工作內容用活潑的方式呈現。遊戲內場景與人物皆以3D呈現，每個職業皆有專屬模型、各任務裡也有配合工作內容而製作的環境，讓玩家在體驗職業的過程中，比起2D遊戲更有身歷其境的感覺。總而言之，這些設計不外乎是希望孩童可透過此款寓教於樂的遊戲，體驗到更多的職業並獲得深刻的感受，在認識職業的同時也了解自己的興趣與適合的生涯規劃。
+        </div>
+        <div class="download"><b><u class="title">下載小叮嚀:</u></b><br>	
+            1. 遊戲安裝與執行時建議關閉防火牆及其他應用程式。<br>
+            2. 本遊戲需搭配《Jobs Do It!》手機APP一起遊玩<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;手機載點:<a href="https://www.google.com.tw/">https://www.google.com.tw/</a>
+        </div>
+        <div class="logo"><img src="logo.png" width="150" height="150"><a style="color:blue;" class="link" href="JobsDoIt.zip" download="JobsDoIt">點我下載遊戲</a></div>
+    </div>
+</body>
+</html>

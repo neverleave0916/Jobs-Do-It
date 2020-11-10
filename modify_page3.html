@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Jobs Do It</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+	body { padding:0; font-family:"微軟正黑體","Microsoft JhengHei"; font-size:20px; }/*background: rgb(249, 247, 232, 0.3);*/
+	
+	
+	.top{
+		position:absolute;
+		left:10%;
+		font-size:32px;
+		z-index:2;
+	}
+	.content{
+		position:absolute;
+		left:10%;
+		width:85%;
+		height:80%;
+	}
+	.content_left{
+		position:absolute;
+		left:20%;
+		width:10%;
+		height:80%;
+	}
+	a:hover{
+		color:blue;
+	}
+	a,a:link{
+		color:gray;
+	}
+
+	.inner{
+		font-weight: 550;
+		margin:0px auto;		
+		text-align:left;			
+	}
+	.button{
+		background-color:  #FAAF5C;
+		border: solid;
+		color: white;
+		padding: 10px 40px;	
+		margin-left:6%;	
+		text-align: center;		
+		display: inline-block;
+		font-size: 16px;
+		border-radius: 12px;		
+	}
+	.inside{
+		position:absolute;
+		left:30%;
+		width:55%;
+		height:40%;
+	}
+	.inside2{
+		position:absolute;
+		left:30%;
+		width:55%;
+		height:40%;
+		top:60%;
+	}
+	.div_check{
+		position:absolute;
+		left:-8%;
+		width:5%;
+		height:10%;
+		top:40%
+	}
+	.tt{
+		text-align: right;
+		vertical-align:middle;
+		width:100px;
+	}
+	table {
+  		border-collapse: collapse;
+	}
+	table td {
+  		border: 2px solid black;
+		
+	}
+	
+	table tr:first-child td {
+  		border-top: 0;
+	}
+	table tr td:first-child {
+  		border-left: 0;
+	}
+	table tr:last-child td {
+  		border-bottom: 0;
+	}
+	table tr td:last-child {
+  		border-right: 0;
+	}
+	img{
+		margin:2px 3px;
+	}
+	.check{		 
+            width: 30px; 
+            height: 30px; 
+	}
+	#edit0,#edit1,#edit2,#edit3,#edit4,#edit5,#edit6,#edit7 {
+   	 	border: none;
+		border-color: transparent;
+		font-size:20px;
+		width:480px;
+	}
+	#edit0,#edit1,#edit2,#edit3,#edit4,#edit5,#edit6,#edit7:focus{
+    outline: none;
+	}
+	#editt0,#editt1,#editt2,#editt3,#editt4,#editt5,#editt6,#editt7 {
+   	 	border: none;
+		border-color: transparent;
+		font-size:20px;
+		width:480px;
+	}
+	#editt0,#editt1,#editt2,#editt3,#editt4,#editt5,#editt6,#editt7:focus{
+    	outline: none;
+	}
+	a{
+		text-decoration:none;
+	}
+	.top_right a,a:link{
+		color:black;
+	}
+	.top_right{
+		position:absolute;
+		font-size:24px;
+		z-index:2;
+		top:6%;
+		cursor:pointer;
+	}
+	</style>
+	<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+	<script type="text/javascript">	
+		window.onload=getinformation;
+
+		
+		function doOutput()
+		{
+        	var obj=document.getElementsByName("checkbox");
+        	var len = obj.length;
+        	var checked = false;
+
+        	for (i = 0; i < len; i++)
+        	{
+            	if (obj[i].checked == true)
+            	{
+                	checked = true;
+                	break;
+            	}
+        	}
+
+			if(checked)
+			{
+				document.getElementById("save").style.display = "block";
+				document.getElementById("delete").style.display = "block";
+				for(i=0;i<8;i++)
+				{
+                  document.getElementById("edit"+i+"").readOnly  = false;
+				}		
+			}
+			else{
+				document.getElementById("save").style.display = "none";
+				document.getElementById("delete").style.display = "none";
+				for(i=0;i<8;i++)
+				{
+					document.getElementById("edit"+i+"").readOnly  = true;
+				}
+			}
+		}
+		function doOutput2()
+		{
+        	var obj=document.getElementsByName("checkbox2");
+        	var len = obj.length;
+        	var checked = false;
+
+        	for (i = 0; i < len; i++)
+        	{
+            	if (obj[i].checked == true)
+            	{
+                	checked = true;
+                	break;
+            	}
+        	}
+
+			if(checked)
+			{
+				document.getElementById("save2").style.display = "block";
+				document.getElementById("delete2").style.display = "block";
+				for(i=0;i<8;i++)
+				{
+                  document.getElementById("editt"+i+"").readOnly  = false;
+				}		
+			}
+			else{
+				document.getElementById("save2").style.display = "none";
+				document.getElementById("delete2").style.display = "none";
+				for(i=0;i<8;i++)
+				{
+					document.getElementById("editt"+i+"").readOnly  = true;
+				}
+			}
+		}
+		function DeleteOrNot()
+		{
+			if(confirm("確定刪除 ?"))
+			{
+				
+				var user = firebase.auth().currentUser;
+				
+				if (user != null) {		
+				var id = firebase.auth().currentUser.uid;				
+				// 	firebase.database().ref('AD_User/' + id +'/Advertise/Two').update({
+				// 	活動名稱:""
+				// 	});	
+				//firebase.database().ref('AD_User/' + id +'/Advertise/25727').remove();
+				//alert(id);
+				firebase.database().ref('AD_User/'+id+'/Advertise/Two/活動名稱').set("");
+				alert("刪除成功!");
+					
+			}				
+				var obj = document.getElementById("div2");
+   				obj.innerHTML = "";//删除div内容
+				//删除div
+   				var parentObj = obj.parentNode;//获取div的父对象
+   				parentObj.removeChild(obj);//通过div的父对象把它删除
+
+			}else{
+				//nothing
+			}
+		}		
+		var firebaseConfig = {
+			apiKey: "AIzaSyAUAbIPPBY63TUc-GKJw1-P5wHQpkQT7mY",
+			authDomain: "jobsdoit-8d922.firebaseapp.com",
+			databaseURL: "https://jobsdoit-8d922.firebaseio.com",
+			projectId: "jobsdoit-8d922",
+			storageBucket: "jobsdoit-8d922.appspot.com",
+			messagingSenderId: "735202865207",
+			appId: "1:735202865207:web:8c5ef1d54ef5c3dcc20fb2",
+			measurementId: "G-F5Q8SCH11J"
+		};
+		  // 資料庫資訊
+		firebase.initializeApp(firebaseConfig);
+		
+		function getinformation()
+		{	
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+					var login_text = document.getElementById("login_text");			
+					login_text.innerHTML="登出";
+					login_text.addEventListener('click', function (){
+						firebase.auth().signOut().then(function() {
+						alert("帳號已登出");
+						window.location.replace("login.html");
+						}).catch(function(error) {
+						// An error happened.
+						});					
+	   				});
+					var id = firebase.auth().currentUser.uid;
+					//alert("使用者為:"+ " "+ id);
+					firebase.database().ref('/AD_User/' + id +'/Advertise/One/').once('value').then(function(snapshot) {								
+						if(snapshot.val().活動名稱 != "")
+						{
+							var edit0 = document.getElementById("edit0");
+							var edit1 = document.getElementById("edit1");
+							var edit2 = document.getElementById("edit2");
+							var edit3 = document.getElementById("edit3");
+							var edit4 = document.getElementById("edit4");
+							var edit5 = document.getElementById("edit5");
+							var edit6 = document.getElementById("edit6");
+							var edit7 = document.getElementById("edit7");
+							edit0.value = snapshot.val().活動名稱;
+							edit1.value = snapshot.val().單位;
+							edit2.value = snapshot.val().日期;
+							edit3.value = snapshot.val().地點;
+							edit4.value = snapshot.val().報名費用;
+							edit5.value = snapshot.val().適合年齡;
+							edit6.value = snapshot.val().官方網站;
+							edit7.value = snapshot.val().內容;
+							downloadImage();
+						}							 					
+					});
+					firebase.database().ref('/AD_User/' + id +'/Advertise/Two/').once('value').then(function(snapshot) {								
+						if(snapshot.val().活動名稱 != "")
+						{
+							var div2 = document.getElementById("div2");
+							div2.style.display = "block";
+
+							var editt0 = document.getElementById("editt0");
+							var editt1 = document.getElementById("editt1");
+							var editt2 = document.getElementById("editt2");
+							var editt3 = document.getElementById("editt3");
+							var editt4 = document.getElementById("editt4");
+							var editt5 = document.getElementById("editt5");
+							var editt6 = document.getElementById("editt6");
+							var editt7 = document.getElementById("editt7");
+							
+							editt0.value = snapshot.val().活動名稱;
+							editt1.value = snapshot.val().單位;
+							editt2.value = snapshot.val().日期;
+							editt3.value = snapshot.val().地點;
+							editt4.value = snapshot.val().報名費用;
+							editt5.value = snapshot.val().適合年齡;
+							editt6.value = snapshot.val().官方網站;
+							editt7.value = snapshot.val().內容;
+							downloadImage();
+						}							 					
+					});						
+				} 
+				else {
+					// No user is signed in.
+					//alert("無使用者登入!");
+				}
+			});
+		}
+		function SaveOrNot()
+		{
+			if(confirm("確定儲存 ?"))
+			{   var edit0 = document.getElementById("edit0");
+				var edit1 = document.getElementById("edit1");
+				var edit2 = document.getElementById("edit2");
+				var edit3 = document.getElementById("edit3");
+				var edit4 = document.getElementById("edit4");
+				var edit5 = document.getElementById("edit5");
+				var edit6 = document.getElementById("edit6");
+				var edit7 = document.getElementById("edit7");
+				var id = firebase.auth().currentUser.uid;
+				firebase.database().ref('AD_User/'+id+'/Advertise/One').update({//新增使用者資料到firebase
+					活動名稱:edit0.value,
+					單位:edit1.value,
+					日期:edit2.value,
+					地點:edit3.value,
+					報名費用:edit4.value,
+					適合年齡:edit5.value,
+					官方網站:edit6.value,
+					內容:edit7.value	
+					});
+
+				window.location.reload()				
+			}else{
+				//nothing
+			}
+		}
+		function SaveOrNot2()
+		{
+			if(confirm("確定儲存 ?"))
+			{   var editt0 = document.getElementById("editt0");
+				var editt1 = document.getElementById("editt1");
+				var editt2 = document.getElementById("editt2");
+				var editt3 = document.getElementById("editt3");
+				var editt4 = document.getElementById("editt4");
+				var editt5 = document.getElementById("editt5");
+				var editt6 = document.getElementById("editt6");
+				var editt7 = document.getElementById("editt7");
+				var id = firebase.auth().currentUser.uid;
+				firebase.database().ref('AD_User/'+id+'/Advertise/Two').update({//新增使用者資料到firebase
+					活動名稱:editt0.value,
+					單位:editt1.value,
+					日期:editt2.value,
+					地點:editt3.value,
+					報名費用:editt4.value,
+					適合年齡:editt5.value,
+					官方網站:editt6.value,
+					內容:editt7.value	
+					});
+
+				window.location.reload()				
+			}else{
+				//nothing
+			}
+		}
+		function downloadImage() 
+		{			
+			var user = firebase.auth().currentUser;
+			var id = firebase.auth().currentUser.uid;
+			firebase.database().ref('/AD_User/' + id +'/Advertise/One/圖片').on("value",function(data){
+			//alert(data.val());
+				if(data.val() != "")
+				{
+					const img = data.val();						
+					var storageRef = firebase.storage().ref();								
+					var starsRef = storageRef.child('Image/'+ img);	
+					var img1 = document.getElementById("img1");		
+					starsRef.getDownloadURL().then(function(url) {				  
+						//alert(url);				  				  
+						var img = new Image();
+						img.src = url;
+						img1.src = url;
+					form.appendChild(img);}).catch(function(error)
+					{
+					var errorcode=error.code;
+					var errormsg=error.message;
+						//alert(errorcode);				  
+					});
+				}
+			
+			})
+			firebase.database().ref('/AD_User/' + id +'/Advertise/Two/圖片').on("value",function(data){
+			//alert(data.val());
+				if(data.val() != "")
+				{
+					const img = data.val();						
+					var storageRef = firebase.storage().ref();								
+					var starsRef = storageRef.child('Image/'+ img);	
+					var img2 = document.getElementById("img2");		
+					starsRef.getDownloadURL().then(function(url) {				  
+						//alert(url);				  				  
+						var img = new Image();
+						img.src = url;
+						img2.src = url;
+					form.appendChild(img);}).catch(function(error)
+					{
+					var errorcode=error.code;
+					var errormsg=error.message;
+						//alert(errorcode);				  
+					});
+				}
+			
+			})									
+		}			
+	</script>
+
+</head>
+<body>    
+	<div class="top">Jobs Do It</div>
+	<div class="top_right" style="left:70%;"><a href="download.html">下載專區</a></div>
+	<div class="top_right" style="left:78%;"><a href="index.html">活動資訊</a></div>
+	<div class="top_right" style="left:86%;" ><a id="act" href="modify_page1.html" >刊登活動</a></div>
+	<div id="login_text" class="top_right" style="left:94%;"><a href="">登出</a></div>
+	<div style="background-color: rgb(251, 250, 232); width:100%; height: 100px; position:relative; top:-10px;"></div>
+	<div class="content_left" style="background-color:#ffe1aa;  text-align:center; z-index:10;"> 
+		<div style="font-size:32px;font-weight: 600; margin-top:140%;"><a href="modify_page1.html"  style="text-decoration:none;">上傳紀錄</a></div>
+		<div style="font-size:32px;font-weight: 600; margin-top:10%; "><a href="modify_page2.html"  style="text-decoration:none;">刊登廣告</a></div>	  
+		<div style="font-size:32px;font-weight: 600; margin-top:10%; "><a href="modify_page3.html"  style="text-decoration:none;">修改/刪除</a></div>	  
+		<div style="font-size:32px;font-weight: 600; margin-top:10%; "><a href="modify_page4.html"  style="text-decoration:none;">基本資料</a></div>	  
+	</div>
+	<div class="content">
+		<p style="font-size:32px;font-weight: 600 ; text-align: right;padding:1% 40% 0% 0%;	">修改/刪除</p>		 				
+		<div id="div1" class="inside" style="border: solid;">
+			<div class="div_check"><input  class="check" type="checkbox" value="1" name="checkbox" onclick="doOutput();">編輯</div>
+			<img id="img1" src="" border="0" width="290px" height="305px">	
+		    <table id="myTable" style="float:right;position: absolute;left: 33%;top: 0%;" width="600" height="310" border="0">
+				<tr>
+				 <td class="tt">活動名稱:</td><td ><input id="edit0" type="text"  readonly="true"  style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				 <td class="tt">單位:</td><td><input id="edit1" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				 <td class="tt">日期:</td><td><input id="edit2" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				 <td class="tt">地點:</td><td><input id="edit3" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				  <td class="tt">報名費用:</td><td><input id="edit4" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				  <td class="tt">適合年齡:</td><td><input id="edit5" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				  <td class="tt">官方網站:</td><td><input id="edit6" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				  <td class="tt">內容:</td><td><textarea id="edit7" readonly="true" style="height:50px;vertical-align:text-top;resize:none;"  cols="65" rows="3"></textarea></td>
+				</tr>
+			</table>
+			<div style="position: absolute;left: 105%;top: 70%;"> 
+				<div style="float:right"><input style="display:none;" id="save" class="button"  type='button' name='save'   value='儲存' onclick="SaveOrNot();"/></div>
+				<div style="float:right"><input style="display:none;" id="delete" class="button"  type='button' name='delete' value='刪除' onclick="DeleteOrNot();"/></div>		
+			</div>
+		</div>
+		<div id="div2" class="inside2" style="border: solid;display: none;">
+			<div class="div_check"><input  class="check" type="checkbox" value="1" name="checkbox2" onclick="doOutput2();">編輯</div>
+			<img id="img2" src="" border="0" width="290px" height="305px">	
+		    <table id="myTable" style="float:right;position: absolute;left: 33%;top: 0%;" width="600" height="310" border="0">
+				<tr>
+				 <td class="tt">活動名稱:</td><td ><input id="editt0" type="text"  readonly="true"  style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				 <td class="tt">單位:</td><td><input id="editt1" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				 <td class="tt">日期:</td><td><input id="editt2" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				 <td class="tt">地點:</td><td><input id="editt3" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				  <td class="tt">報名費用:</td><td><input id="editt4" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				  <td class="tt">適合年齡:</td><td><input id="editt5" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				  <td class="tt">官方網站:</td><td><input id="editt6" type="text"  readonly="true" value="" style="height:30px;"></input></td>
+				</tr>
+				<tr>
+				  <td class="tt">內容:</td><td><textarea id="editt7" readonly="true" style="height:50px;vertical-align:text-top;resize:none;"  cols="65" rows="3"></textarea></td>
+				</tr>
+			</table>
+			<div style="position: absolute;left: 105%;top: 70%;"  > 
+				<div style="float:right"><input style="display:none;" id="save2" class="button"  type='button' name='save'   value='儲存' onclick="SaveOrNot2();"/></div>
+				<div style="float:right"><input style="display:none;" id="delete2" class="button"  type='button' name='delete' value='刪除' onclick="DeleteOrNot();"/></div>		
+			</div>
+		</div>		  			  						  
+	</div>
+	<script src="/__/firebase/6.2.0/firebase-app.js"></script> 
+  	<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
+  	<script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+  	<script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
+  	<script src="/__/firebase/init.js"></script>
+</body>
+</html>

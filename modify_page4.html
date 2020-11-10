@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Jobs Do It</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+	body { padding:0; font-family:"微軟正黑體","Microsoft JhengHei"; font-size:20px; }/*background: rgb(249, 247, 232, 0.3);*/
+	.top{
+		position:absolute;
+		left:10%;
+		font-size:32px;
+		z-index:2;
+	}
+	.content{
+		position:absolute;
+		left:10%;
+		width:85%;
+		height:80%;
+	}
+	.content_left{
+		position:absolute;
+		left:20%;
+		width:10%;
+		height:80%;
+	}
+	a:hover{
+		color:blue;
+	}
+	a,a:link{
+		color:gray;
+	}
+	.inner{
+		font-weight: 550;
+		margin:0px auto;		
+		text-align:left;			
+	}
+	.button{
+		background-color:  #FAAF5C;
+		border: solid;
+		color: white;
+		padding: 10px 20px;	
+		margin-left:10%;	
+		text-align: center;		
+		display: inline-block;
+		font-size: 24px;
+		border-radius: 12px;
+		cursor:pointer;		
+		
+	}
+	a{
+		text-decoration:none;
+	}
+	.top_right a,a:link{
+		color:black;
+	}
+	.top_right{
+		position:absolute;
+		font-size:24px;
+		z-index:2;
+		top:6%;
+		cursor:pointer;
+	}
+	</style>
+		<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+
+	<script type="text/javascript">	
+	window.onload = getData;
+	var firebaseConfig = {
+		apiKey: "AIzaSyAUAbIPPBY63TUc-GKJw1-P5wHQpkQT7mY",
+		authDomain: "jobsdoit-8d922.firebaseapp.com",
+		databaseURL: "https://jobsdoit-8d922.firebaseio.com",
+		projectId: "jobsdoit-8d922",
+		storageBucket: "jobsdoit-8d922.appspot.com",
+		messagingSenderId: "735202865207",
+		appId: "1:735202865207:web:8c5ef1d54ef5c3dcc20fb2",
+		measurementId: "G-F5Q8SCH11J"
+		};
+		  // 資料庫資訊
+		  firebase.initializeApp(firebaseConfig);
+		  //firebase.analytics();	
+		
+		function check_user()
+		{
+			var user = firebase.auth().currentUser;
+			
+			if (user) {
+				// User is signed in.
+				var id = firebase.auth().currentUser.uid;
+				alert("使用者為:"+ " "+ id);
+			} else {
+				// No user is signed in.
+				alert("無使用者登入!");
+			}  
+		}
+		function getData()
+		{	
+			var user = firebase.auth().currentUser;			
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+					var login_text = document.getElementById("login_text");			
+					login_text.innerHTML="登出";
+					login_text.addEventListener('click', function (){
+						firebase.auth().signOut().then(function() {
+						alert("帳號已登出");
+						window.location.replace("login.html");
+						}).catch(function(error) {
+						// An error happened.
+						});					
+	   				});
+					var id = firebase.auth().currentUser.uid;
+					//alert("使用者為:"+ " "+ id);
+					var userInfo = document.getElementById("username");
+					var usermail = document.getElementById("mail");
+					var usertel = document.getElementById("tel");			
+					
+					firebase.database().ref('/AD_User/' + id).once('value').then(function(snapshot) {				
+						userInfo.value = snapshot.val().Name;
+						usermail.innerHTML += snapshot.val().Mail;
+						usertel.value = snapshot.val().Telephone;
+					});
+				} else {
+					// No user is signed in.
+					//alert("無使用者登入!");
+				}
+			});				
+		}
+		function reset_user()
+		{
+			if(confirm("確定修改?"))
+			{
+				var id = firebase.auth().currentUser.uid;
+				const name = form.elements.name.value;
+				const tel = form.elements.tel.value;			
+				firebase.database().ref('AD_User/'+id+'/Name/').set(name);
+				firebase.database().ref('AD_User/'+id+'/Telephone/').set(tel);
+				alert("修改成功");
+			}
+			else{
+				//nothing
+			}			
+		}
+		function Reset_Email()
+		{
+			var auth = firebase.auth();			
+			var id = firebase.auth().currentUser.uid;
+		
+			firebase.database().ref('/AD_User/' + id).once('value').then(function(snapshot) {
+				
+				auth.sendPasswordResetEmail(snapshot.val().Mail).then(function() {
+				
+				alert("信件已寄出，請到信箱裡確認並修改密碼!");
+				}).catch(function(error) {
+					alert(error.code);
+				});
+			});		
+		}		
+	</script>
+</head>
+<body>    
+	<div class="top">Jobs Do It</div>
+	<div class="top_right" style="left:70%;"><a href="download.html">下載專區</a></div>
+	<div class="top_right" style="left:78%;"><a href="index.html">活動資訊</a></div>
+	<div class="top_right" style="left:86%;" ><a id="act" href="modify_page1.html" >刊登活動</a></div>
+	<div id="login_text" class="top_right" style="left:94%;"><a href="">登出</a></div>
+	<div style="background-color: rgb(251, 250, 232); width:100%; height: 100px; position:relative; top:-10px;"></div>
+	<div class="content_left" style="background-color:#ffe1aa;  text-align:center; z-index:10;"> 
+		<div style="font-size:32px;font-weight: 600; margin-top:140%;"><a href="modify_page1.html"  style="text-decoration:none;">上傳紀錄</a></div>
+		<div style="font-size:32px;font-weight: 600; margin-top:10%; "><a href="modify_page2.html"  style="text-decoration:none;">刊登廣告</a></div>	  
+		<div style="font-size:32px;font-weight: 600; margin-top:10%; "><a href="modify_page3.html"  style="text-decoration:none;">修改/刪除</a></div>	  
+		<div style="font-size:32px;font-weight: 600; margin-top:10%; "><a href="modify_page4.html"  style="text-decoration:none;">基本資料</a></div>	  
+	</div>
+	<div class="content">
+		<p style="font-size:36px;font-weight: 600 ; text-align: right;padding:1% 41% 0% 0%;	">基本資料</p>
+		<form name='form' style="text-align:center;">
+			<div style="letter-spacing:3px; font-weight: 550; position:relative;text-align: left; padding:1% 45% 1% 4%;height: 55px;left:38.5%;" id="mail">帳號: </div>
+			<div class="inner" style="text-align: right; padding:0% 35% 1% 4%;">姓名：<input id="username" type='text' style="width:300px; height:30px;font-size: 20px;" name='name'/></div>
+		    <div class="inner" style="text-align: right; padding:1% 35% 1% 4%;">電話：<input id="tel" type='tel' style="width:300px;height:30px;font-size:20px;" name='tel'/></div>
+			<div style="position:absolute; width: 10%;left: 45%;top:50%;"><input  class="button"  type='button'  value='修改密碼' onclick="Reset_Email();"/></div>
+			<div style="position:absolute; width: 10%;left: 55%;top:50%;"><button class="button" onclick = "reset_user();">修改完成</button></div>		
+		</form>					  
+	</div>
+	<script src="/__/firebase/6.2.0/firebase-app.js"></script> 
+  	<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
+  	<script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+  	<script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
+  	<script src="/__/firebase/init.js"></script> 
+</body>
+</html>

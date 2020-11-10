@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Jobs Do It</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+	body { padding:0; font-family:"微軟正黑體","Microsoft JhengHei"; font-size:20px; }/*background: rgb(249, 247, 232, 0.3);*/
+	form{
+		text-align: center;
+	}
+	a{
+		text-decoration:none;
+	}
+	.top{
+		position:absolute;
+		left:10%;
+		font-size:32px;
+		z-index:2;
+	}
+	.top_right a,a:link{
+		color:black;
+	}
+	.top_right{
+		position:absolute;
+		font-size:24px;
+		z-index:2;
+		top:6%;
+	}
+	.content{
+		position:absolute;
+		left:30%;
+		border: solid;
+		border-color:#fff4c7;
+		border-radius: 12px;
+		width: 40%;
+		height: 70%;
+		z-index:3;		
+	}
+	.inner{		
+		font-weight: 550;
+		position:relative;
+		top:10%;
+		left:25%;
+		width: 50%;	
+		height:65px;	
+		text-align:left;		
+	}
+	.button{
+		background-color:  #FAAF5C;
+		border: solid;
+		color: white;
+		padding: 10px 32px;		
+		text-align: center;		
+		display: inline-block;
+		font-size: 16px;
+		border-radius: 12px;
+		cursor:pointer;
+	}
+	</style>
+	<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+	<script type="text/javascript">	
+		window.onload=first;
+		var firebaseConfig = {
+		apiKey: "AIzaSyAUAbIPPBY63TUc-GKJw1-P5wHQpkQT7mY",
+		authDomain: "jobsdoit-8d922.firebaseapp.com",
+		databaseURL: "https://jobsdoit-8d922.firebaseio.com",
+		projectId: "jobsdoit-8d922",
+		storageBucket: "jobsdoit-8d922.appspot.com",
+		messagingSenderId: "735202865207",
+		appId: "1:735202865207:web:8c5ef1d54ef5c3dcc20fb2",
+		measurementId: "G-F5Q8SCH11J"
+		};
+		  // 資料庫資訊
+		  firebase.initializeApp(firebaseConfig);
+		  firebase.analytics();
+
+		//var database = firebase.database();
+
+		function SignUp() //註冊使用者
+		{
+			const form = document.forms['form'];    // 取得 name 屬性為 form 的表單
+			const name = form.elements.name.value;  // 取得 elements 集合中 name 屬性為 name 的值
+			const email = form.elements.mail.value;// 取得 elements 集合中 name 屬性為 email 的值
+			const password = form.elements.password.value;// 取得 elements 集合中 name 屬性為 email 的值
+			const tele = form.elements.tele.value;// 取得 elements 集合中 name 屬性為 email 的值						
+			var check_tele = form.elements.tele.value;
+			
+			if(form.elements.name.value == "" ||  form.elements.mail.value == "" || form.elements.password.value  == "" || form.elements.tele.value == ""  ){
+				alert('註冊失敗，資料輸入不完整!!');
+			}else if (password.length < 4) {
+				alert('密碼最少由4個字母或數字組成，請重新輸入!');
+				form.elements.password.value = "";
+				return;			
+			}else if(tele != ""){
+					var phone = /^[09]{2}[0-9]{8}$/;//手機號碼驗證
+					if(!(phone.test(check_tele))){     
+					alert('手機號碼輸入有誤！');
+					form.elements.tele.value = "";	}				
+			}
+			
+			firebase.auth().createUserWithEmailAndPassword(email,password).then(function(){					
+				var id=firebase.auth().currentUser.uid;		
+				
+				firebase.database().ref('AD_User/'+id).set({//新增使用者資料到firebase
+					Name:name,Mail:email,Telephone:tele,Advertise:""	
+					});
+					sendEmailVerification();//寄驗證信
+						}).catch(function(error){
+								var errorcode=error.code;
+								var errormsg=error.message;
+							
+								alert(errorcode);
+							
+									});								
+					
+		}
+		
+		function sendEmailVerification()//寄驗證信到使用者信箱
+		{
+			var user = firebase.auth().currentUser;
+			user.sendEmailVerification().then(function() {
+					alert("註冊成功，請到信箱收取驗證信!");
+					});									  								
+		}						
+   
+		function Login()//登入
+		{
+			const form = document.forms['form'];    // 取得 name 屬性為 form 的表單			
+			const email = form.elements.mail.value;// 取得 elements 集合中 name 屬性為 email 的值
+			const password = form.elements.password.value;// 取得 elements 集合中 name 屬性為 email 的值
+			
+			if(form.elements.mail.value == "" || form.elements.password.value  == "" ){
+				alert('登入失敗，資料輸入不完整!!');
+			}else if (password.length < 4) {
+				alert('請重新檢查密碼!');				
+				return;			
+			}else{			
+			firebase.auth().signInWithEmailAndPassword(email,password).then(function(){		
+			
+					var user = firebase.auth().currentUser;
+					var emailVerified;
+					if (user != null) {		  
+						emailVerified = user.emailVerified;			  							   			
+					if(emailVerified)
+					{
+						alert('登入成功!');
+						//var id=firebase.auth().currentUser.uid;
+						//window.location.replace("https://www.google.com/webhp?authuser=1");
+						//localStorage.setItem('id',id);   	
+					}
+					else{
+						alert('信箱尚未驗證，請到信箱收取驗證信!');
+					}	
+				}
+					
+				}).catch(function(error){
+								var errorcode=error.code;
+								var errormsg=error.message;							
+								alert(errorcode);
+							
+				});	
+			}
+		}
+		function login_ornot()
+		{
+			var user = firebase.auth().currentUser;			
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+					
+					var act = document.getElementById("act");			
+					act.href="modify_page4.html";
+					
+				} else {
+					var act = document.getElementById("act");			
+					act.href="login.html";
+					alert("請先登入");
+				}
+			});			
+		}
+		function first()
+		{
+			var user = firebase.auth().currentUser;			
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user) {
+					
+					var login_text = document.getElementById("login_text");			
+					login_text.innerHTML="登出";
+					login_text.addEventListener('click', function (){
+						firebase.auth().signOut().then(function() {
+						alert("帳號已登出");
+						}).catch(function(error) {
+						// An error happened.
+						});					
+	   				});
+					
+				} else {
+					var login_text = document.getElementById("login_text");			
+					login_text.innerHTML="登入";
+					//alert("請先登入");
+				}
+			});
+		}		
+	</script>
+</head>
+<body>
+
+	<div class="top">Jobs Do It</div>
+	<div class="top_right" style="left:70%;"><a href="download.html">下載專區</a></div>
+	<div class="top_right" style="left:78%;"><a href="index.html">活動資訊</a></div>
+	<div class="top_right" style="left:86%;" onclick="login_ornot();"><a id="act" href="" >刊登活動</a></div>
+	<div id="login_text" class="top_right" style="left:94%;"><a href="login.html">登入</a></div>
+	<div style="background-color: rgb(251, 250, 232); width:100%; height: 100px; position:relative; top:-10px;left:-5px;"></div>
+	<div class="content">
+		<p style="font-size:32px;font-weight: 600 ; text-align: center;	">註冊</p>
+		<form name='form'>
+			<div class="inner">姓名：&nbsp;&nbsp;&nbsp;<input type='text' name='name' style="width:200px; height:30px"/></div>
+			<div class="inner">Gmail：<input type='text' name='mail' style="width:200px; height:30px"/></div>
+		    <div class="inner">密碼：&nbsp;&nbsp;&nbsp;<input type='text' name='password' style="width:200px; height:30px"/></div>
+			<div class="inner">電話：&nbsp;&nbsp;&nbsp;<input type='text' name='tele' style="width:200px; height:30px"/>	</div>		
+			<p><input class="button" type='button' name='submit' value='註冊' onclick="SignUp();"/></p>
+		</form>			  
+	</div>	
+	
+	<script src="/__/firebase/6.2.0/firebase-app.js"></script>  
+  	<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
+  	<script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+  	<script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
+  	<script src="/__/firebase/init.js"></script> 
+</body>
+</html>
